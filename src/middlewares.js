@@ -10,10 +10,22 @@ const s3 = new S3Client({
   },
 });
 
-const multerUploader = multerS3({
+const s3ImageUploader = multerS3({
   s3: s3,
   bucket: "we-tubee",
   acl: "public-read",
+  key: function (req, file, cb) {
+    cb(null, "images/" + file.originalname);
+  },
+});
+
+const s3VideoUploader = multerS3({
+  s3: s3,
+  bucket: "we-tubee",
+  acl: "public-read",
+  key: function (req, file, cb) {
+    cb(null, "videos/" + file.originalname);
+  },
 });
 
 export const localsMiddleware = (req, res, next) => {
@@ -44,10 +56,10 @@ export const publicOnlyMiddleware = (req, res, next) => {
 export const avatarUpload = multer({
   dest: "uploads/avatars/",
   limits: { fileSize: 3000000 },
-  storage: multerUploader,
+  storage: s3ImageUploader,
 });
 export const videoUpload = multer({
   dest: "uploads/videos/",
   limits: { fileSize: 10000000 },
-  storage: multerUploader,
+  storage: s3VideoUploader,
 });
