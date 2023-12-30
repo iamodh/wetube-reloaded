@@ -1,0 +1,9 @@
+extends base.pug
+include mixins/video
+
+block content
+    div.video-grid
+        each videoinfo in videos 
+            +video(videoinfo)
+        else
+            span.empty__message No videos found
